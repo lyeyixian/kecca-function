@@ -22,6 +22,7 @@ admin.initializeApp({
 firebase.initializeApp(firebaseConfig);
 
 const db = admin.firestore();
+
 // Express
 const app = require("express")();
 
@@ -45,8 +46,47 @@ app.get("/events", (req, res) => {
     .catch((err) => console.error(err));
 });
 
+// Helper function for authentication
+const FBAuth = (req, res, next) => {
+  let idToken;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    idToken = req.headers.authorization.split("Bearer ")[1];
+  } else {
+    console.error("No token found");
+
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then((decodedToken) => {
+      req.user = decodedToken;
+
+      return db
+        .collection("users")
+        .where("userId", "==", req.user.uid)
+        .limit(1)
+        .get();
+    })
+    .then((data) => {
+      req.user.studentCard = data.docs[0].data().studentCard;
+
+      return next();
+    })
+    .catch((err) => {
+      console.error("Error while verifying token", err);
+
+      return res.status(403).json(err);
+    });
+};
+
 // Create an event
-app.post("/event", (req, res) => {
+app.post("/event", FBAuth, (req, res) => {
   const newEvent = {
     name: req.body.name,
     duration: req.body.duration,
