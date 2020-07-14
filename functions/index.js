@@ -21,14 +21,13 @@ admin.initializeApp({
 
 firebase.initializeApp(firebaseConfig);
 
+const db = admin.firestore();
 // Express
 const app = require("express")();
 
 // Get all events
 app.get("/events", (req, res) => {
-  admin
-    .firestore()
-    .collection("/events")
+  db.collection("/events")
     .orderBy("createdAt", "desc")
     .get()
     .then((data) => {
@@ -56,9 +55,7 @@ app.post("/event", (req, res) => {
     organiser: req.body.organiser,
   };
 
-  admin
-    .firestore()
-    .collection("/events")
+  db.collection("/events")
     .add(newEvent)
     .then((doc) => {
       res.json({ message: `document ${doc.id} created successfully` });
@@ -78,21 +75,49 @@ app.post("/signup", (req, res) => {
     confirmPassword: req.body.confirmPassword,
     name: req.body.name,
     studentCard: req.body.studentCard,
-    nusnetId: req.body.nusnetId,
   };
+  let token, userId;
 
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(newUser.email, newUser.password)
+  // validation
+  db.doc(`/users/${newUser.studentCard}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return res
+          .status(400)
+          .json({ studentCard: "Student card number already exists" });
+      } else {
+        return firebase
+          .auth()
+          .createUserWithEmailAndPassword(newUser.email, newUser.password);
+      }
+    })
     .then((data) => {
-      return res
-        .status(201)
-        .json({ message: `user ${data.user.uid} signed up successfully` });
+      userId = data.user.uid;
+      return data.user.getIdToken();
+    })
+    .then((authToken) => {
+      token = authToken;
+      const userCredential = {
+        userId,
+        createdAt: new Date().toISOString(),
+        name: newUser.name,
+        email: newUser.email,
+        studentCard: newUser.studentCard,
+      };
+      return db.doc(`/users/${newUser.studentCard}`).set(userCredential);
+    })
+    .then(() => {
+      return res.status(201).json({ token });
     })
     .catch((err) => {
       console.error(err);
 
-      return res.status(500).json({ error: err.code });
+      if (err.code === "auth/email-already-in-use") {
+        return res.status(400).json({ email: "Email is already in use" });
+      } else {
+        return res.status(500).json({ error: err.code });
+      }
     });
 });
 
