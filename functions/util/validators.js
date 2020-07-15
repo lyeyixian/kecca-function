@@ -12,6 +12,12 @@ const isEmail = (email) => {
   }
 };
 
+const isName = (name) => {
+  const nameRegEx = /^[a-zA-Z]+ [a-zA-Z]+ /;
+
+  return nameRegEx.test(name);
+};
+
 exports.validateSignupData = (data) => {
   let errors = {};
 
@@ -40,6 +46,8 @@ exports.validateSignupData = (data) => {
   // Name
   if (isEmpty(data.name)) {
     errors.name = "Must not be empty";
+  } else if (!isName(data.name)) {
+    errors.name = "Must be full name";
   }
 
   return {
