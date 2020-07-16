@@ -40,15 +40,20 @@ exports.signup = (req, res) => {
       userId = data.user.uid;
       return data.user.getIdToken();
     })
-    .then((authToken) => {
-      token = authToken;
+    .then((idToken) => {
+      token = idToken;
       const userCredential = {
         userId,
         createdAt: new Date().toISOString(),
         name: newUser.name,
         email: newUser.email,
         studentCard: newUser.studentCard,
+        adminStatus: {
+          tokenHeader: "User ",
+          cca: "",
+        },
       };
+
       return db.doc(`/users/${newUser.studentCard}`).set(userCredential);
     })
     .then(() => {
@@ -95,5 +100,23 @@ exports.login = (req, res) => {
       } else {
         return res.status(500).json({ error: err.code });
       }
+    });
+};
+
+exports.setCurrentUserAsAdmin = (req, res) => {
+  const adminStatus = {
+    tokenHeader: "Admin ",
+    cca: req.body.cca,
+  };
+
+  db.doc(`/users/${req.user.studentCard}`)
+    .update({ adminStatus })
+    .then(() => {
+      return res.json({ message: "Admin status updated successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
     });
 };
