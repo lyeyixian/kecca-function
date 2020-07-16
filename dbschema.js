@@ -17,6 +17,7 @@ let db = {
       name: "Lye Yi Xian",
       studentCard: "A0200813X",
       userId: "WX3NbazroKOaye3grRA4AV9X8Xs1",
+      ccaParticipated: ["basketball", "badminton"],
       adminStatus: {
         tokenHeader: "Admin ", // 'User '
         cca: "basketball", // ''
