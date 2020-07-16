@@ -22,10 +22,13 @@ exports.getAllEvents = (req, res) => {
 exports.createOneEvent = (req, res) => {
   const newEvent = {
     name: req.body.name,
+    dateTime: req.body.dateTime,
     duration: req.body.duration,
     listOfAttendees: req.body.listOfAttendees,
+    listOfAbsentees: req.body.listOfAbsentees,
     createdAt: new Date().toISOString(),
-    organiser: req.body.organiser,
+    organiser: req.admin.studentCard,
+    cca: req.admin.cca,
   };
 
   db.collection("/events")
