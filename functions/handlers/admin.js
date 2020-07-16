@@ -20,3 +20,22 @@ exports.createCCA = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getAllMembers = (req, res) => {
+  const membersData = {};
+
+  db.collection("cca")
+    .where("name", "==", req.admin.cca)
+    .limit(1)
+    .get()
+    .then((data) => {
+      membersData.listOfMembers = data.docs[0].data().listOfMembers;
+
+      return res.json(membersData);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};

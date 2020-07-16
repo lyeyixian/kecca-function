@@ -9,7 +9,7 @@ const { fbAuthUser, fbAuthAdmin } = require("./util/fbAuth");
 // Handlers
 const { getAllEvents, createOneEvent } = require("./handlers/events");
 const { signup, login, setCurrentUserAsAdmin } = require("./handlers/users");
-const { createCCA } = require("./handlers/admin");
+const { createCCA, getAllMembers } = require("./handlers/admin");
 
 // Event route
 app.get("/events", getAllEvents);
@@ -17,6 +17,7 @@ app.get("/events", getAllEvents);
 // Admin route
 app.post("/event", fbAuthAdmin, createOneEvent);
 app.post("/cca", fbAuthAdmin, createCCA);
+app.get("/members", fbAuthAdmin, getAllMembers);
 
 // User route
 app.post("/signup", signup);
