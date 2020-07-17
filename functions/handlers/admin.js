@@ -3,15 +3,23 @@ const { db } = require("../util/admin");
 exports.createCCA = (req, res) => {
   const ccaCredentials = {
     name: req.admin.cca,
-    listOfMembers: req.body.listOfMembers,
+    listOfMembers: [],
     admin: req.admin.studentCard,
+    pending: [],
   };
 
-  db.collection("/cca")
-    .add(ccaCredentials)
+  db.doc(`/cca/${ccaCredentials.name}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return res.status(400).json({ cca: "CCA already exists" });
+      } else {
+        return db.doc(`/cca/${ccaCredentials.name}`).set(ccaCredentials);
+      }
+    })
     .then((doc) => {
       res.json({
-        message: `document ${doc.id} (${ccaCredentials.name}) created successfully`,
+        message: `CCA (${ccaCredentials.name}) created successfully`,
       });
     })
     .catch((err) => {
@@ -22,14 +30,14 @@ exports.createCCA = (req, res) => {
 };
 
 exports.getAllMembers = (req, res) => {
-  const membersData = {};
+  let membersData = [];
 
   db.collection("cca")
     .where("name", "==", req.admin.cca)
     .limit(1)
     .get()
     .then((data) => {
-      membersData.listOfMembers = data.docs[0].data().listOfMembers;
+      membersData = data.docs[0].data().listOfMembers;
 
       return res.json(membersData);
     })
