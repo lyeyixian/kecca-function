@@ -29,6 +29,7 @@ let db = {
       name: "basketball",
       listOfMembers: ["A0200713X", "A1294857X"],
       admin: "A0200813X",
+      pending: ["A8748374X"],
     },
   ],
 };
