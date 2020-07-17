@@ -120,3 +120,22 @@ exports.setCurrentUserAsAdmin = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.join = (req, res) => {
+  db.doc(`/cca/${req.body.cca}`)
+    .get()
+    .then((doc) => {
+      const pending = doc.data().pending;
+      pending.push(req.user.studentCard);
+
+      return db.doc(`/cca/${req.body.cca}`).update({ pending });
+    })
+    .then(() => {
+      return res.json({ message: "Request sent successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
