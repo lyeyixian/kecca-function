@@ -42,3 +42,61 @@ exports.createOneEvent = (req, res) => {
       return res.status(500).json({ error: "something went wrong" });
     });
 };
+
+exports.getParticipatedEvents = (req, res) => {
+  db.collection("/events")
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((data) => {
+      const allParticipatedEvents = [];
+
+      data.forEach((doc) => {
+        if (
+          doc
+            .data()
+            .listOfAttendees.find((student) => student === req.user.studentCard)
+        ) {
+          allParticipatedEvents.push({
+            eventId: doc.id,
+            name: doc.data().name,
+            organiser: doc.data().organiser,
+            cca: doc.data().cca,
+            duration: doc.data().duration,
+            dateTime: doc.data().dateTime,
+          });
+        }
+
+        return res.json(allParticipatedEvents);
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getOrganisedEvents = (req, res) => {
+  db.collection("/events")
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((data) => {
+      const allOrganisedEvents = [];
+
+      data.forEach((doc) => {
+        if (doc.data().cca === req.admin.cca) {
+          allOrganisedEvents.push({
+            eventId: doc.id,
+            ...doc.data(),
+          });
+        }
+
+        return res.json(allOrganisedEvents);
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
