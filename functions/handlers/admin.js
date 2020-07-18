@@ -66,3 +66,36 @@ exports.getAllCCA = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getPendingRequest = (req, res) => {
+  db.doc(`/cca/${req.admin.cca}`)
+    .get()
+    .then((doc) => {
+      let pendingRequest = [];
+
+      doc.data().pending.forEach((user) => {
+        let studentCredential = {};
+
+        db.doc(`/users/${user}`)
+          .get()
+          .then((doc) => {
+            studentCredential = {
+              ...doc.data(),
+            };
+            pendingRequest.push(studentCredential);
+
+            return res.json(pendingRequest);
+          })
+          .catch((err) => {
+            console.error(err);
+
+            return res.status(500).json({ error: err.code });
+          });
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
