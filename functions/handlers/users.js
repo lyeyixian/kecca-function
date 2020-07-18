@@ -48,6 +48,7 @@ exports.signup = (req, res) => {
         name: newUser.name,
         email: newUser.email,
         studentCard: newUser.studentCard,
+        ccaParticipated: [],
         adminStatus: {
           tokenHeader: "User ",
           cca: "",
@@ -132,6 +133,24 @@ exports.join = (req, res) => {
     })
     .then(() => {
       return res.json({ message: "Request sent successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getUserDetails = (req, res) => {
+  db.doc(`/users/${req.user.studentCard}`)
+    .get()
+    .then((doc) => {
+      const userDetail = {
+        ccaParticipated: doc.data().ccaParticipated,
+        adminStatus: doc.data().adminStatus,
+      };
+
+      return res.json(userDetail);
     })
     .catch((err) => {
       console.error(err);

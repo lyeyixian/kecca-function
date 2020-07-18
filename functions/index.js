@@ -18,6 +18,7 @@ const {
   login,
   setCurrentUserAsAdmin,
   join,
+  getUserDetails,
 } = require("./handlers/users");
 const { createCCA, getAllMembers, getAllCCA } = require("./handlers/admin");
 
@@ -36,6 +37,7 @@ app.get("/cca/members", fbAuthAdmin, getAllMembers);
 // User route
 app.post("/signup", signup);
 app.post("/login", login);
+app.get("/user", fbAuthUser, getUserDetails);
 app.post("/user/admin", fbAuthUser, setCurrentUserAsAdmin);
 app.post("/user/join", fbAuthUser, join);
 
@@ -47,5 +49,7 @@ exports.api = functions.region("asia-east2").https.onRequest(app);
 // TODO:
 // admin accept request
 // admin take attendance
-// get all CCAs
-// get user details
+
+// Trigger:
+// when accept request in cca update in user detail (ccaParticipated)
+// update adminStatus or cca admin property
