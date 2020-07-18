@@ -19,7 +19,7 @@ const {
   setCurrentUserAsAdmin,
   join,
 } = require("./handlers/users");
-const { createCCA, getAllMembers } = require("./handlers/admin");
+const { createCCA, getAllMembers, getAllCCA } = require("./handlers/admin");
 
 // Event route
 app.get("/events", getAllEvents);
@@ -30,6 +30,7 @@ app.post("/event/attendance", fbAuthAdmin); // TODO
 
 // CCA route
 app.post("/cca", fbAuthAdmin, createCCA);
+app.get("/cca", getAllCCA);
 app.get("/cca/members", fbAuthAdmin, getAllMembers);
 
 // User route

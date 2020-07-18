@@ -47,3 +47,22 @@ exports.getAllMembers = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getAllCCA = (req, res) => {
+  db.collection("/cca")
+    .get()
+    .then((data) => {
+      let ccas = [];
+
+      data.forEach((doc) => {
+        ccas.push(doc.data().name);
+      });
+
+      return res.json(ccas);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
