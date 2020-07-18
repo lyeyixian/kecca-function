@@ -137,3 +137,30 @@ exports.acceptRequest = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.declineRequest = (req, res) => {
+  let pending = [];
+  const ccaDocument = db.doc(`/cca/${req.admin.cca}`);
+
+  ccaDocument
+    .get()
+    .then((doc) => {
+      doc.data().pending.forEach((user) => {
+        pending.push(user);
+      });
+
+      const index = pending.indexOf(req.body.user);
+
+      pending.splice(index, 1);
+
+      return ccaDocument.update({ pending });
+    })
+    .then(() => {
+      return res.json({ message: "Request declined successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};

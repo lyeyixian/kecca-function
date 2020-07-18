@@ -26,6 +26,7 @@ const {
   getAllCCA,
   getPendingRequest,
   acceptRequest,
+  declineRequest,
 } = require("./handlers/admin");
 
 // Event route
@@ -41,6 +42,7 @@ app.get("/cca", getAllCCA);
 app.get("/cca/members", fbAuthAdmin, getAllMembers);
 app.get("/cca/request", fbAuthAdmin, getPendingRequest);
 app.post("/cca/accept", fbAuthAdmin, acceptRequest);
+app.post("/cca/decline", fbAuthAdmin, declineRequest);
 
 // User route
 app.post("/signup", signup);
@@ -55,9 +57,14 @@ app.post("/user/join", fbAuthUser, join);
 exports.api = functions.region("asia-east2").https.onRequest(app);
 
 // TODO:
-// admin decline request
 // admin take attendance
 // get target user detail
+
+// New Collection: Request
+// field :
+//    user:
+//    cca:
+//    status:
 
 // Trigger:
 // when accept request in cca update in user detail (ccaParticipated)
