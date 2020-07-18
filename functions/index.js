@@ -12,6 +12,7 @@ const {
   createOneEvent,
   getParticipatedEvents,
   getOrganisedEvents,
+  takeAttendance,
 } = require("./handlers/events");
 const {
   signup,
@@ -34,7 +35,7 @@ app.get("/events", getAllEvents);
 app.post("/event", fbAuthAdmin, createOneEvent);
 app.get("/event/user", fbAuthUser, getParticipatedEvents);
 app.get("/event/cca", fbAuthAdmin, getOrganisedEvents);
-// app.post("/event/attendance", fbAuthAdmin); // TODO
+app.post("/event/:eventId/attendance", fbAuthAdmin, takeAttendance); // TODO
 
 // CCA route
 app.post("/cca", fbAuthAdmin, createCCA);
@@ -57,8 +58,7 @@ app.post("/user/join", fbAuthUser, join);
 exports.api = functions.region("asia-east2").https.onRequest(app);
 
 // TODO:
-// admin take attendance
-// get target user detail
+// validate input of attendance taking
 
 // New Collection: Request
 // field :

@@ -24,8 +24,6 @@ exports.createOneEvent = (req, res) => {
     name: req.body.name,
     dateTime: req.body.dateTime,
     duration: req.body.duration,
-    listOfAttendees: req.body.listOfAttendees,
-    listOfAbsentees: req.body.listOfAbsentees,
     createdAt: new Date().toISOString(),
     organiser: req.admin.studentCard,
     cca: req.admin.cca,
@@ -34,7 +32,7 @@ exports.createOneEvent = (req, res) => {
   db.collection("/events")
     .add(newEvent)
     .then((doc) => {
-      res.json({ message: `document ${doc.id} created successfully` });
+      return res.json({ message: `document ${doc.id} created successfully` });
     })
     .catch((err) => {
       console.error(err);
@@ -93,6 +91,39 @@ exports.getOrganisedEvents = (req, res) => {
 
         return res.json(allOrganisedEvents);
       });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.takeAttendance = (req, res) => {
+  const ccaDocument = db.doc(`/cca/${req.admin.cca}`);
+  const eventDocument = db.doc(`/events/${req.params.eventId}`);
+  const listOfAttendees = req.body.listOfAttendees;
+  let listOfAbsentees = [];
+
+  ccaDocument
+    .get()
+    .then((doc) => {
+      doc.data().listOfMembers.forEach((user) => {
+        listOfAbsentees.push(user);
+      });
+      req.body.listOfAttendees.forEach((user) => {
+        const index = listOfAbsentees.indexOf(user);
+
+        listOfAbsentees.splice(index, 1);
+      });
+
+      return eventDocument.update({
+        listOfAttendees,
+        listOfAbsentees,
+      });
+    })
+    .then(() => {
+      return res.json({ message: "Attendance taken successfully" });
     })
     .catch((err) => {
       console.error(err);
