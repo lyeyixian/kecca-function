@@ -25,6 +25,7 @@ const {
   getAllMembers,
   getAllCCA,
   getPendingRequest,
+  acceptRequest,
 } = require("./handlers/admin");
 
 // Event route
@@ -39,6 +40,7 @@ app.post("/cca", fbAuthAdmin, createCCA);
 app.get("/cca", getAllCCA);
 app.get("/cca/members", fbAuthAdmin, getAllMembers);
 app.get("/cca/request", fbAuthAdmin, getPendingRequest);
+app.post("/cca/accept", fbAuthAdmin, acceptRequest);
 
 // User route
 app.post("/signup", signup);
@@ -53,7 +55,6 @@ app.post("/user/join", fbAuthUser, join);
 exports.api = functions.region("asia-east2").https.onRequest(app);
 
 // TODO:
-// admin accept request
 // admin decline request
 // admin take attendance
 // get target user detail

@@ -99,3 +99,41 @@ exports.getPendingRequest = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.acceptRequest = (req, res) => {
+  const user = req.body.user;
+  let pendingRequest = [];
+  let listOfMembers = [];
+  let updatedCredentials = {};
+  const ccaDocument = db.doc(`/cca/${req.admin.cca}`);
+
+  ccaDocument
+    .get()
+    .then((doc) => {
+      doc.data().pending.forEach((user) => {
+        pendingRequest.push(user);
+      });
+      doc.data().listOfMembers.forEach((user) => {
+        listOfMembers.push(user);
+      });
+
+      const index = pendingRequest.indexOf(user);
+
+      pendingRequest.splice(index, 1);
+      listOfMembers.push(user);
+      updatedCredentials = {
+        listOfMembers,
+        pending: pendingRequest,
+      };
+
+      return ccaDocument.update(updatedCredentials);
+    })
+    .then(() => {
+      return res.json({ message: "Join request accepted successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
