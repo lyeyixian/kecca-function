@@ -92,8 +92,14 @@ exports.updateCCAParticipatedOnRequestAccept = functions
     }
   });
 
+// TODO
+exports.updateCCAAdminOnUserAdminStatusChange = functions
+  .region("asia-east2")
+  .firestore.document("/users/{studentCard}")
+  .onUpdate((change) => {});
+
 // TODO:
-// validate input of attendance taking
+// validate input of all
 
 // New Collection: Request
 // field :
@@ -102,4 +108,5 @@ exports.updateCCAParticipatedOnRequestAccept = functions
 //    status:
 
 // Trigger:
-// update adminStatus or cca admin property
+// update cca admin when user admin status changed
+// update former admin to user when cca admin changed
