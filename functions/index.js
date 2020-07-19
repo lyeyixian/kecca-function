@@ -6,6 +6,7 @@ const app = require("express")();
 // Auth
 const { fbAuthUser, fbAuthAdmin } = require("./util/fbAuth");
 
+const { db } = require("./util/admin");
 // Handlers
 const {
   getAllEvents,
@@ -35,7 +36,7 @@ app.get("/events", getAllEvents);
 app.post("/event", fbAuthAdmin, createOneEvent);
 app.get("/event/user", fbAuthUser, getParticipatedEvents);
 app.get("/event/cca", fbAuthAdmin, getOrganisedEvents);
-app.post("/event/:eventId/attendance", fbAuthAdmin, takeAttendance); // TODO
+app.post("/event/:eventId/attendance", fbAuthAdmin, takeAttendance);
 
 // CCA route
 app.post("/cca", fbAuthAdmin, createCCA);
@@ -57,6 +58,40 @@ app.post("/user/join", fbAuthUser, join);
 
 exports.api = functions.region("asia-east2").https.onRequest(app);
 
+exports.updateCCAParticipatedOnRequestAccept = functions
+  .region("asia-east2")
+  .firestore.document("/cca/{name}")
+  .onUpdate((change) => {
+    const before = change.before.data().listOfMembers;
+    const after = change.after.data().listOfMembers;
+    const cca = change.before.data().name;
+
+    if (before.length !== after.length) {
+      const batch = db.batch();
+
+      return db
+        .collection("/users")
+        .where("studentCard", "==", after[after.length - 1])
+        .limit(1)
+        .get()
+        .then((data) => {
+          const ccaParticipated = [];
+
+          data.docs[0].data().ccaParticipated.forEach((cca) => {
+            ccaParticipated.push(cca);
+          });
+
+          ccaParticipated.push(cca);
+
+          batch.update(db.doc(`/users/${data.docs[0].data().studentCard}`), {
+            ccaParticipated,
+          });
+
+          return batch.commit();
+        });
+    }
+  });
+
 // TODO:
 // validate input of attendance taking
 
@@ -67,5 +102,4 @@ exports.api = functions.region("asia-east2").https.onRequest(app);
 //    status:
 
 // Trigger:
-// when accept request in cca update in user detail (ccaParticipated)
 // update adminStatus or cca admin property

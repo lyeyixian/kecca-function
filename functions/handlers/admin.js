@@ -101,7 +101,7 @@ exports.getPendingRequest = (req, res) => {
 };
 
 exports.acceptRequest = (req, res) => {
-  const user = req.body.user;
+  const studentCard = req.body.studentCard;
   let pendingRequest = [];
   let listOfMembers = [];
   let updatedCredentials = {};
@@ -117,10 +117,10 @@ exports.acceptRequest = (req, res) => {
         listOfMembers.push(user);
       });
 
-      const index = pendingRequest.indexOf(user);
+      const index = pendingRequest.indexOf(studentCard);
 
       pendingRequest.splice(index, 1);
-      listOfMembers.push(user);
+      listOfMembers.push(studentCard);
       updatedCredentials = {
         listOfMembers,
         pending: pendingRequest,
@@ -149,7 +149,7 @@ exports.declineRequest = (req, res) => {
         pending.push(user);
       });
 
-      const index = pending.indexOf(req.body.user);
+      const index = pending.indexOf(req.body.studentCard);
 
       pending.splice(index, 1);
 
