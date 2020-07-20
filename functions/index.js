@@ -96,7 +96,19 @@ exports.updateCCAParticipatedOnRequestAccept = functions
 exports.updateCCAAdminOnUserAdminStatusChange = functions
   .region("asia-east2")
   .firestore.document("/users/{studentCard}")
-  .onUpdate((change) => {});
+  .onUpdate((change) => {
+    const before = change.before.data().adminStatus;
+    const after = change.after.data().adminStatus;
+    const studentCard = change.after.data().studentCard;
+
+    if (before.cca !== after.cca && after.tokenHeader === "Admin ") {
+      const batch = db.batch();
+      const admin = studentCard;
+      batch.update(db.doc(`/cca/${after.cca}`), { admin });
+
+      return batch.commit();
+    }
+  });
 
 // TODO:
 // validate input of all
@@ -108,5 +120,5 @@ exports.updateCCAAdminOnUserAdminStatusChange = functions
 //    status:
 
 // Trigger:
-// update cca admin when user admin status changed
 // update former admin to user when cca admin changed
+// need to also consider the case of removing listOfMembers
