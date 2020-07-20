@@ -66,7 +66,7 @@ exports.updateCCAParticipatedOnRequestAccept = functions
     const after = change.after.data().listOfMembers;
     const cca = change.before.data().name;
 
-    if (before.length !== after.length) {
+    if (before.length < after.length) {
       const batch = db.batch();
 
       return db
