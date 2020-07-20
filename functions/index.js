@@ -92,7 +92,6 @@ exports.updateCCAParticipatedOnRequestAccept = functions
     }
   });
 
-// TODO
 exports.updateCCAAdminOnUserAdminStatusChange = functions
   .region("asia-east2")
   .firestore.document("/users/{studentCard}")
@@ -110,6 +109,26 @@ exports.updateCCAAdminOnUserAdminStatusChange = functions
     }
   });
 
+exports.updateAdminStatusOnCCAAdminChange = functions
+  .region("asia-east2")
+  .firestore.document("/cca/{name}")
+  .onUpdate((change) => {
+    const before = change.before.data().admin;
+    const after = change.after.data().admin;
+
+    if (before !== after) {
+      const batch = db.batch();
+      const adminStatus = {
+        cca: "",
+        tokenHeader: "User ",
+      };
+
+      batch.update(db.doc(`/users/${before}`), { adminStatus });
+
+      return batch.commit();
+    }
+  });
+
 // TODO:
 // validate input of all
 
@@ -120,5 +139,4 @@ exports.updateCCAAdminOnUserAdminStatusChange = functions
 //    status:
 
 // Trigger:
-// update former admin to user when cca admin changed
 // need to also consider the case of removing listOfMembers
