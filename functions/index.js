@@ -139,4 +139,3 @@ exports.updateAdminStatusOnCCAAdminChange = functions
 //    status:
 
 // Trigger:
-// need to also consider the case of removing listOfMembers
