@@ -155,3 +155,20 @@ exports.getUserDetails = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getTargetUserDetails = (req, res) => {
+  db.collection("users")
+    .where("userId", "==", req.params.userId)
+    .limit(1)
+    .get()
+    .then((data) => {
+      const targetUserDetails = data.docs[0].data();
+
+      return res.json(targetUserDetails);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
