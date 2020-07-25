@@ -134,7 +134,7 @@ exports.join = (req, res) => {
     .get()
     .then((doc) => {
       const pending = doc.data().pending;
-      pending.push(req.user.studentCard);
+      pending.push(req.body.studentCard);
 
       return db.doc(`/cca/${req.body.cca}`).update({ pending });
     })

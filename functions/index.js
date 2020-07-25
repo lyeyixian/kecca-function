@@ -54,7 +54,7 @@ app.post("/login", login);
 app.get("/user/:userId", getTargetUserDetails);
 app.get("/user", fbAuthUser, getUserDetails);
 app.post("/user/admin", fbAuthUser, setCurrentUserAsAdmin);
-app.post("/user/join", fbAuthUser, join);
+app.post("/user/join", join);
 app.get("/admin", fbAuthAdmin, getAdminDetails);
 
 // Test
