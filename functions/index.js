@@ -22,6 +22,7 @@ const {
   join,
   getUserDetails,
   getTargetUserDetails,
+  getAdminDetails,
 } = require("./handlers/users");
 const {
   createCCA,
@@ -54,6 +55,7 @@ app.get("/user/:userId", getTargetUserDetails);
 app.get("/user", fbAuthUser, getUserDetails);
 app.post("/user/admin", fbAuthUser, setCurrentUserAsAdmin);
 app.post("/user/join", fbAuthUser, join);
+app.get("/admin", fbAuthAdmin, getAdminDetails);
 
 // Test
 // app.put("/test", FBAuth, setCurrentUserAsAdmin);

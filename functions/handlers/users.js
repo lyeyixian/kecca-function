@@ -174,3 +174,23 @@ exports.getTargetUserDetails = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getAdminDetails = (req, res) => {
+  db.doc(`/users/${req.admin.studentCard}`)
+    .get()
+    .then((doc) => {
+      const adminDetail = {
+        ccaParticipated: doc.data().ccaParticipated,
+        adminStatus: doc.data().adminStatus,
+        name: doc.data().name,
+        studentCard: doc.data().studentCard,
+      };
+
+      return res.json(adminDetail);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
