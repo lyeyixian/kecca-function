@@ -104,13 +104,20 @@ exports.updateCCAAdminOnUserAdminStatusChange = functions
     const after = change.after.data().adminStatus;
     const studentCard = change.after.data().studentCard;
 
-    if (before.cca !== after.cca && after.tokenHeader === "Admin ") {
-      const batch = db.batch();
-      const admin = studentCard;
-      batch.update(db.doc(`/cca/${after.cca}`), { admin });
+    db.doc(`/cca/${after.cca}`)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          if (before.cca !== after.cca && after.tokenHeader === "Admin ") {
+            const batch = db.batch();
+            const admin = studentCard;
+            batch.update(db.doc(`/cca/${after.cca}`), { admin });
 
-      return batch.commit();
-    }
+            return batch.commit();
+          }
+        }
+      })
+      .catch((err) => console.log(err));
   });
 
 exports.updateAdminStatusOnCCAAdminChange = functions
