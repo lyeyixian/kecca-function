@@ -145,6 +145,8 @@ exports.getUserDetails = (req, res) => {
       const userDetail = {
         ccaParticipated: doc.data().ccaParticipated,
         adminStatus: doc.data().adminStatus,
+        name: doc.data().name,
+        studentCard: doc.data().studentCard,
       };
 
       return res.json(userDetail);
