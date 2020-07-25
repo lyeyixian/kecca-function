@@ -5,7 +5,11 @@ const firebaseConfig = require("../util/config");
 
 firebase.initializeApp(firebaseConfig);
 
-const { validateSignupData, validateLoginData } = require("../util/validators");
+const {
+  validateSignupData,
+  validateLoginData,
+  validateSetAsAdmin,
+} = require("../util/validators");
 
 exports.signup = (req, res) => {
   const newUser = {
@@ -106,6 +110,12 @@ exports.setCurrentUserAsAdmin = (req, res) => {
     tokenHeader: "Admin ",
     cca: req.body.cca,
   };
+
+  const { valid, errors } = validateSetAsAdmin(adminStatus);
+
+  if (!valid) {
+    return res.status(400).json(errors);
+  }
 
   db.doc(`/users/${req.user.studentCard}`)
     .update({ adminStatus })

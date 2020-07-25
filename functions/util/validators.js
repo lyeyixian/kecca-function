@@ -72,3 +72,16 @@ exports.validateLoginData = (data) => {
     valid: Object.keys(errors).length === 0 ? true : false,
   };
 };
+
+exports.validateSetAsAdmin = (data) => {
+  let errors = {};
+
+  if (isEmpty(data.cca)) {
+    errors.cca = "Must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
