@@ -6,6 +6,7 @@ exports.createCCA = (req, res) => {
     listOfMembers: [],
     admin: req.admin.studentCard,
     pending: [],
+    token: req.body.token,
   };
 
   db.doc(`/cca/${ccaCredentials.name}`)
