@@ -27,6 +27,8 @@ exports.createOneEvent = (req, res) => {
     createdAt: new Date().toISOString(),
     organiser: req.admin.studentCard,
     cca: req.admin.cca,
+    listOfAttendees: [],
+    listOfAbsentees: [],
   };
 
   db.collection("/events")
