@@ -7,6 +7,7 @@ const app = require("express")();
 const { fbAuthUser, fbAuthAdmin } = require("./util/fbAuth");
 
 const { db } = require("./util/admin");
+
 // Handlers
 const {
   getAllEvents,
@@ -47,8 +48,8 @@ app.post("/event/:eventId/attendance", fbAuthAdmin, takeAttendance);
 app.post("/cca", fbAuthAdmin, createCCA);
 app.get("/cca", getAllCCA);
 app.get("/cca/:ccaName", getCCADetails);
-app.get("/cca/members", fbAuthAdmin, getAllMembers);
-app.get("/cca/request", fbAuthAdmin, getPendingRequest);
+app.get("/members", fbAuthAdmin, getAllMembers);
+app.get("/request", fbAuthAdmin, getPendingRequest);
 app.post("/cca/accept", fbAuthAdmin, acceptRequest);
 app.post("/cca/decline", fbAuthAdmin, declineRequest);
 
