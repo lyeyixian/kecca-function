@@ -165,3 +165,20 @@ exports.declineRequest = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getCCADetails = (req, res) => {
+  db.doc(`/cca/${req.params.ccaName}`)
+    .get()
+    .then((doc) => {
+      const ccaDetail = {
+        ...doc.data(),
+      };
+
+      return res.json(ccaDetail);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};

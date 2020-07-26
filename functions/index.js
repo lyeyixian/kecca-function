@@ -32,6 +32,7 @@ const {
   getPendingRequest,
   acceptRequest,
   declineRequest,
+  getCCADetails,
 } = require("./handlers/admin");
 
 // Event route
@@ -45,6 +46,7 @@ app.post("/event/:eventId/attendance", fbAuthAdmin, takeAttendance);
 // CCA route
 app.post("/cca", fbAuthAdmin, createCCA);
 app.get("/cca", getAllCCA);
+app.get("/cca/:ccaName", getCCADetails);
 app.get("/cca/members", fbAuthAdmin, getAllMembers);
 app.get("/cca/request", fbAuthAdmin, getPendingRequest);
 app.post("/cca/accept", fbAuthAdmin, acceptRequest);
