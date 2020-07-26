@@ -14,6 +14,7 @@ const {
   getParticipatedEvents,
   getOrganisedEvents,
   takeAttendance,
+  getParticipatedEventsAdmin,
 } = require("./handlers/events");
 const {
   signup,
@@ -37,6 +38,7 @@ const {
 app.get("/events", getAllEvents);
 app.post("/event", fbAuthAdmin, createOneEvent);
 app.get("/event/user", fbAuthUser, getParticipatedEvents);
+app.get("/event/admin", fbAuthAdmin, getParticipatedEventsAdmin);
 app.get("/event/cca", fbAuthAdmin, getOrganisedEvents);
 app.post("/event/:eventId/attendance", fbAuthAdmin, takeAttendance);
 

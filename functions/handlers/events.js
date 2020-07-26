@@ -74,6 +74,41 @@ exports.getParticipatedEvents = (req, res) => {
     });
 };
 
+exports.getParticipatedEventsAdmin = (req, res) => {
+  db.collection("/events")
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((data) => {
+      const allParticipatedEvents = [];
+
+      data.forEach((doc) => {
+        if (
+          doc
+            .data()
+            .listOfAttendees.find(
+              (student) => student === req.admin.studentCard
+            )
+        ) {
+          allParticipatedEvents.push({
+            eventId: doc.id,
+            name: doc.data().name,
+            organiser: doc.data().organiser,
+            cca: doc.data().cca,
+            duration: doc.data().duration,
+            dateTime: doc.data().dateTime,
+          });
+        }
+
+        return res.json(allParticipatedEvents);
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return res.status(500).json({ error: err.code });
+    });
+};
+
 exports.getOrganisedEvents = (req, res) => {
   db.collection("/events")
     .orderBy("createdAt", "desc")
