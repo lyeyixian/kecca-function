@@ -34,7 +34,7 @@ exports.createOneEvent = (req, res) => {
   db.collection("/events")
     .add(newEvent)
     .then((doc) => {
-      return res.json({ message: `document ${doc.id} created successfully` });
+      return res.json({ eventId: doc.id });
     })
     .catch((err) => {
       console.error(err);
