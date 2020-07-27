@@ -39,7 +39,7 @@ const {
 
 // Event route
 app.get("/events", getAllEvents);
-app.get("/event/:eventId", getOneEvent);
+app.get("/:eventId", getOneEvent);
 app.post("/event", fbAuthAdmin, createOneEvent);
 app.get("/event/user", fbAuthUser, getParticipatedEvents);
 app.get("/event/admin", fbAuthAdmin, getParticipatedEventsAdmin);
