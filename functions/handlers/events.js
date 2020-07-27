@@ -20,7 +20,7 @@ exports.getAllEvents = (req, res) => {
 };
 
 exports.getOneEvent = (req, res) => {
-  db.doc(`/${req.params.eventId}`)
+  db.doc(`/events/${req.params.eventId}`)
     .get()
     .then((doc) => {
       const eventDetail = {

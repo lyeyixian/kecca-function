@@ -39,7 +39,7 @@ const {
 
 // Event route
 app.get("/events", getAllEvents);
-app.get("/:eventId", getOneEvent);
+app.get("/events/:eventId", getOneEvent);
 app.post("/event", fbAuthAdmin, createOneEvent);
 app.get("/event/user", fbAuthUser, getParticipatedEvents);
 app.get("/event/admin", fbAuthAdmin, getParticipatedEventsAdmin);
@@ -58,9 +58,9 @@ app.post("/cca/decline", fbAuthAdmin, declineRequest);
 // User route
 app.post("/signup", signup);
 app.post("/login", login);
-app.get("/user/:userId", getTargetUserDetails);
 app.get("/user", fbAuthUser, getUserDetails);
 app.post("/user/admin", fbAuthUser, setCurrentUserAsAdmin);
+app.get("/user/:userId", getTargetUserDetails);
 app.post("/join", join);
 app.get("/admin", fbAuthAdmin, getAdminDetails);
 
