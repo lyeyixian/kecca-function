@@ -9,6 +9,7 @@ const {
   validateSignupData,
   validateLoginData,
   validateSetAsAdmin,
+  validateJoin,
 } = require("../util/validators");
 
 exports.signup = (req, res) => {
@@ -120,14 +121,13 @@ exports.setCurrentUserAsAdmin = (req, res) => {
     .get()
     .then((doc) => {
       validToken = doc.data().token;
+      const { valid, errors } = validateSetAsAdmin(adminCredential, validToken);
+
+      if (!valid) {
+        return res.status(400).json(errors);
+      }
     })
     .catch((err) => console.log(err));
-
-  const { valid, errors } = validateSetAsAdmin(adminCredential, validToken);
-
-  if (!valid) {
-    return res.status(400).json(errors);
-  }
 
   db.doc(`/users/${req.user.studentCard}`)
     .update({ adminStatus })
@@ -144,7 +144,7 @@ exports.setCurrentUserAsAdmin = (req, res) => {
 exports.join = (req, res) => {
   const joinCredential = {
     cca: req.body.cca,
-    studetnCard: req.body.studentCard,
+    studentCard: req.body.studentCard,
   };
 
   const { valid, errors } = validateJoin(joinCredential);
