@@ -73,11 +73,17 @@ exports.validateLoginData = (data) => {
   };
 };
 
-exports.validateSetAsAdmin = (data) => {
+exports.validateSetAsAdmin = (data, validToken) => {
   let errors = {};
 
   if (isEmpty(data.cca)) {
     errors.cca = "Must not be empty";
+  }
+
+  if (isEmpty(data.token)) {
+    errors.token = "Must not be empty";
+  } else if (data.token !== validToken) {
+    errors.token = "Invalid token";
   }
 
   return {

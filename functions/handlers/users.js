@@ -109,9 +109,18 @@ exports.setCurrentUserAsAdmin = (req, res) => {
   const adminStatus = {
     tokenHeader: "Admin ",
     cca: req.body.cca,
+    token: req.body.token,
   };
+  let validToken = "";
 
-  const { valid, errors } = validateSetAsAdmin(adminStatus);
+  db.doc(`/cca/${adminStatus.cca}`)
+    .get()
+    .then((doc) => {
+      validToken = doc.data().token;
+    })
+    .catch((err) => console.log(err));
+
+  const { valid, errors } = validateSetAsAdmin(adminStatus, validToken);
 
   if (!valid) {
     return res.status(400).json(errors);
