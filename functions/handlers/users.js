@@ -109,6 +109,9 @@ exports.setCurrentUserAsAdmin = (req, res) => {
   const adminStatus = {
     tokenHeader: "Admin ",
     cca: req.body.cca,
+  };
+  const adminCredential = {
+    cca: req.body.cca,
     token: req.body.token,
   };
   let validToken = "";
@@ -120,7 +123,7 @@ exports.setCurrentUserAsAdmin = (req, res) => {
     })
     .catch((err) => console.log(err));
 
-  const { valid, errors } = validateSetAsAdmin(adminStatus, validToken);
+  const { valid, errors } = validateSetAsAdmin(adminCredential, validToken);
 
   if (!valid) {
     return res.status(400).json(errors);
