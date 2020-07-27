@@ -16,6 +16,7 @@ const {
   getOrganisedEvents,
   takeAttendance,
   getParticipatedEventsAdmin,
+  getOneEvent,
 } = require("./handlers/events");
 const {
   signup,
@@ -38,6 +39,7 @@ const {
 
 // Event route
 app.get("/events", getAllEvents);
+app.get("/event/:eventId", getOneEvent);
 app.post("/event", fbAuthAdmin, createOneEvent);
 app.get("/event/user", fbAuthUser, getParticipatedEvents);
 app.get("/event/admin", fbAuthAdmin, getParticipatedEventsAdmin);
@@ -146,7 +148,8 @@ exports.updateAdminStatusOnCCAAdminChange = functions
   });
 
 // TODO:
-// validate input of all
+// validate input for createOneEvent
+// validate input for setAsAdmin
 
 // New Collection: Request
 // field :

@@ -19,6 +19,19 @@ exports.getAllEvents = (req, res) => {
     .catch((err) => console.error(err));
 };
 
+exports.getOneEvent = (req, res) => {
+  db.doc(`/events/${req.params.eventId}`)
+    .get()
+    .then((doc) => {
+      const eventDetail = {
+        ...doc.data(),
+        eventId: doc.id,
+      };
+      return res.json(eventDetail);
+    })
+    .catch((err) => console.error(err));
+};
+
 exports.createOneEvent = (req, res) => {
   const newEvent = {
     name: req.body.name,
