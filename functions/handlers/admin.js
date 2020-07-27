@@ -147,11 +147,12 @@ exports.declineRequest = (req, res) => {
 };
 
 exports.getCCADetails = (req, res) => {
-  db.doc(`/cca/${req.params.ccaName}`)
+  db.doc(`/cca/${req.admin.cca}`)
     .get()
     .then((doc) => {
       const ccaDetail = {
-        ...doc.data(),
+        name: doc.data().name,
+        listOfMembers: doc.data().listOfMembers,
       };
 
       return res.json(ccaDetail);
