@@ -91,3 +91,20 @@ exports.validateSetAsAdmin = (data, validToken) => {
     valid: Object.keys(errors).length === 0 ? true : false,
   };
 };
+
+exports.validateJoin = (data) => {
+  let errors = {};
+
+  if (isEmpty(data.cca)) {
+    errors.cca = "Must not be empty";
+  }
+
+  if (isEmpty(data.studentCard)) {
+    errors.studentCard = "Must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};

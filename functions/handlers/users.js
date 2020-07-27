@@ -142,6 +142,17 @@ exports.setCurrentUserAsAdmin = (req, res) => {
 };
 
 exports.join = (req, res) => {
+  const joinCredential = {
+    cca: req.body.cca,
+    studetnCard: req.body.studentCard,
+  };
+
+  const { valid, errors } = validateJoin(joinCredential);
+
+  if (!valid) {
+    return res.status(400).json(errors);
+  }
+
   db.doc(`/cca/${req.body.cca}`)
     .get()
     .then((doc) => {
