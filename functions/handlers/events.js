@@ -78,9 +78,8 @@ exports.getParticipatedEvents = (req, res) => {
             dateTime: doc.data().dateTime,
           });
         }
-
-        return res.json(allParticipatedEvents);
       });
+      return res.json(allParticipatedEvents);
     })
     .catch((err) => {
       console.error(err);
@@ -113,9 +112,8 @@ exports.getParticipatedEventsAdmin = (req, res) => {
             dateTime: doc.data().dateTime,
           });
         }
-
-        return res.json(allParticipatedEvents);
       });
+      return res.json(allParticipatedEvents);
     })
     .catch((err) => {
       console.error(err);
@@ -138,9 +136,9 @@ exports.getOrganisedEvents = (req, res) => {
             ...doc.data(),
           });
         }
-
-        return res.json(allOrganisedEvents);
       });
+
+      return res.json(allOrganisedEvents);
     })
     .catch((err) => {
       console.error(err);
